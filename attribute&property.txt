@@ -1,0 +1,5 @@
+DOM
+attribute：HTML文档中定义的"属性"，文本组分。
+property：JS对象的"属性"，内存实体。
+
+在 ECMAScript 中，对象由特性（attribute）构成，特性可以是原始值，也可以是引用值。如果特性存放的是函数，它将被看作对象的方法（method），否则该特性被看作对象的属性（property）。

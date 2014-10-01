@@ -1,0 +1,97 @@
+帮助：help(mode)
+
+一、创建向量和矩阵
+
+建立向量：
+	c(1,2,3)  1:100  3*1:10+2（从1到10并进行3*n+2运算后的结果）
+
+访问向量元素：
+	x[-n]，除了x[n]都显示  x[1:5] x[c(1,2,3)] x[x<2 & x>0]
+	（实质上[]内是下标向量或关于值的关系表达式）
+
+按指定规律产生向量（数列）：
+	seq(1,50) seq(1,50,by=2)步长 seq(1,50,length=10)项数(自动计算步长)
+
+产生字母序列：
+	letters[1:15]	
+
+查看长度：length(x)
+
+查看类型：mode(x)
+
+颠倒向量：rev(x)
+
+排序向量：sort(x)
+
+两个向量合成矩阵：按行rbind(x1,x2) 按列cbing(x1,x2)
+
+一个向量生成矩阵：matrix(x,nrow=3,ncol=4,byrow=T)  默认是bycol，即竖着排
+
+二、统计运算
+mean(x) sum min max var方差 sd标准差 prod连乘
+
+对数据框的列求平均值 colMeans(x)[c("x1","x2")],可选对哪几列
+
+****在某方向对x使用mean函数：apply(x,2,mean) 1代表行，2代表列
+
+
+*若使用which类内的方法，则返回1-index向量
+	which.min(x)  which(x==2)
+
+（1）分布函数——根据某个分布产生随机数
+利用正态分布产生n个随机数向量：rnom(n) 可选参数：mean sd
+泊松分布：rpois
+指数分布：rexp
+Gamma分布：rgamma
+均匀分布：runif 可选参数：min max
+二项分布：rbinom
+几何分布：rgeom
+
+
+三、矩阵运算
+t(x)转置矩阵 
++ - *(元素相乘)
+
+矩阵相乘：a%*%b
+求对角线：diag(x) x是矩阵
+将向量作为对角线构建矩阵：diag(a) a是向量
+产生n阶单位矩阵（对角线为1）：diag(n)
+
+矩阵求逆:solve(x)
+由矩阵a和向量b（等号右面），解方程组：solve(a,b)
+
+求矩阵特征值和特征向量：a.e=eigen(a,symmetric=T)
+
+
+四、数组——加上维度的向量，矩阵也是一种数组
+is.vector(x)  is.array(x) is.matrix(x)
+
+dim(x)<-c(2,3)——将向量x转化成2*3的矩阵（数组）
+
+五、数据框
+类似于矩阵，但是每一列可以是不同的类型。每行是一个观测值，每一列是一个变量/属性
+
+将等长列向量转化为数据框：data.frame(x1,x2)  替换列头：data.frame("aa"=x1,"bb"=x2)
+
+画散点图：plot（x）x是数据框——plot也可以画其他的图
+
+六、读文件
+文本文件：x=read.table("abc.txt")
+剪切板：x=read.table("clipbpard",header=F)
+excel：
+	法1：另存为的prn文本，再read.table
+	法2：另存为CSV，再read.csv
+	法3：安装RODBC包，再通过ODBC
+		1. 使用library(RODBC)装载包
+		2. z<-odbcConnectExcel2007("abc.xls")
+		3. w<-sqlFetch(z,"Sheet1")
+七、写文件
+write.table(x，file="",col.names=F,row.names=F,sep=" ")x是数据框
+
+八、循环语句
+for(i in 1:59)
+while(condition)
+
+八、R脚本
+运行脚本：source("C:\\h.r")
+	print()输出
