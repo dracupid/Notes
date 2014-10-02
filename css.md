@@ -1,7 +1,6 @@
-#CSS(Cascading Style Sheets)基础
+#CSS(Cascading Style Sheets)
 -------------------------------
-
-一般而言，所有的样式会根据下面的规则层叠于一个新的虚拟样式表中  
+  
 **优先级从低到高：**
 - 浏览器缺省设置
 - 外部样式表
@@ -20,7 +19,7 @@ declaration = property + value
 selector { property: value;}
 ```
 > IF: 值为若干单词，则要给值加引号<br/>
-> ELSE: No comma and quote in value.<br/>
+> ELSE: No comma and quote in value,except font-family.<br/>
 > font 属性中可以用/分隔字体大小和行高 `font：large/150% Helvetica;` 
   
 被分组的选择器就可以分享相同的声明
@@ -36,24 +35,30 @@ HTML子元素将继承祖先元素所拥有的属性，可以覆写。
 `@import url(XX)`, 用在最前。
 ##1.4 创建CSS
 ###（1）外部样式表
-    <head><link rel="stylesheet" type="text/css" href="mystyle.css" /></head>
+```html
+<head><link rel="stylesheet" type="text/css" href="mystyle.css" /></head>
+```
 ###（2）内部样式表
-    <head><style type="text/css"> hr {color: sienna;}</style></head>
+```html
+<head><style type="text/css"> hr {color: sienna;}</style></head>
+```
 > 考虑不支持style标签的老浏览器，应将标签内容用`<!-- -->`包裹
 
 ###（3）内联样式
+```html
     <p style="color: sienna; margin-left: 20px">Thi</p>
+```
 ##2. Selector
 ###2.1 HTML/XML tag name and *
 ###2.2 Class Selector
 ```css
-    .className {text-align: center}
-    .className1 .className2 {text-align: center} // 同时有两个类，顺序无关(低版本IE有兼容问题)
-    td.fancy {color: #f60;background: #666; } //元素可以基于类而被选择
+.className {text-align: center}
+.className1 .className2 {text-align: center} // 同时有两个类，顺低版本IE有兼容问题)
+td.fancy {color: #f60;background: #666; } //元素可以基于类而被选择
 ```
 ```html
-    <h1 class="className">center-aligned</h1>
-    <td class="fancy">
+<h1 class="className">center-aligned</h1>
+<td class="fancy">
 ```
 ###2.3 Id Selector
 ```css
@@ -73,7 +78,7 @@ HTML子元素将继承祖先元素所拥有的属性，可以覆写。
 
 ###结合选择器
 ```css
-    input[type="text"]{ width:150px;}
+input[type="text"]{ width:150px;}
 ```
 ###2.5 Descendant/Contexual Selector
 ```css
@@ -134,10 +139,22 @@ h1 {color: #333 !important ;}
 
 ##7. Value and Unit
 ###7.1 Length
-- 
+- em: 1em = font-size
+- px
 
-  
 ###7.2 Color
 - name: red 
 - RGB: rgb(100%,0%,100%)  rgb(0,100,100)
 - hex: #ff0000  #f00
+
+###7.3 URL
+- url(path)，相对于css而不是html文件
+
+###7.4 keyword
+none, inherit, ...
+
+###7.5 others
+deg, gead, rad, ms, s, Hz, MHz
+
+##8. Font
+- font：使用一种通用字体作为最后选择（sans-serif）
