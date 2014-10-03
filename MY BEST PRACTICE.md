@@ -13,4 +13,4 @@
 
 # CSS
 1. Always use background-image with background-color together.
-    - It really helps when the background image fails to load.Especially when the text is white.
+    - It really helps when the background image fails to load. Especially when the text is white.

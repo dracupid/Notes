@@ -1,6 +1,7 @@
 #CSS(Cascading Style Sheets)
 -------------------------------
-  
+CSS 3 is not included by now.
+
 **优先级从低到高：**
 - 浏览器缺省设置
 - 外部样式表
@@ -164,7 +165,11 @@ deg, gead, rad, ms, s, Hz, MHz
 - baseline：小写x底端线。
 - text-decoration：不会被后代继承
 - 使用简写属性时，未设置的值会被重置为默认值。
-- 边距按顺时针方向设置值
+- 简化属性按顺时针方向设置值
+- background-position：
+    + length：从元素的（X，Y）开始显示背景图。负值可以理解成从背景图的（-X,-Y）位置开始在元素中显示，可实现切图
+    + percent：元素的（X%,Y%）点与背景图的（X%,Y%）点对齐
+- 非替换行内元素和表元素不能使用min/max-width/height
 
 ##9. 盒模型
 - margin-border(>0,non-%)-padding(>0,透明)-content(>0,仅块级和替换元素)。
@@ -179,7 +184,7 @@ deg, gead, rad, ms, s, Hz, MHz
 
 ###9.1 block-level
 - 元素7项水平属性之和必须等于父元素width，允许其中margin属性为负。
-    + 重置margin-right：当水平方向上的margin、width都被限定，七个元素之和不足父元素width（overconstrained），强制margin-right为auto；如果超过，强制margin-right为负数。
+    + 重置margin-right：当水平方向上的margin、width都被限定，七个元素之和不足父元素width（overconstrained），强制margin-right为auto；如果超过，强制margin-right为负数。【优先保证左】
     + 若width为auto，则由元素的padding、margin、border和父元素width关系计算动态得出
     + 若margin-left和margin-right为auto，则元素居中。
     + 若margin和width都为auto，margin为0
@@ -194,6 +199,8 @@ deg, gead, rad, ms, s, Hz, MHz
     + 如果元素内容高度大于height，由overfolw决定行为.
  
 - 对于替换元素，若width/height为auto，则width和height为元素固有宽度。若width或height只指定一个的具体长度，另一个会成比例变化。
+
+- 水平方向有独占性而竖直方向没有导致二者的差异
 
 ###9.2 inline-level
 - Aonymous text：不包含在in-line元素中的字符串
@@ -211,3 +218,29 @@ deg, gead, rad, ms, s, Hz, MHz
 - inline：略
 - inline-block：类似行内替换元素
 - run-in：使块级元素成为下一个块级元素的行内部分
+- none：元素从文档中移除。（visiability:hidden不会从文档中移除）
+
+##11. float
+- 浮动元素会从正常的文档流中删除，并变成块级元素。但仍会影响布局
+- 浮动元素的margin不会被合并
+- 浮动非替换元素无比声明width
+- 浮动元素外边界不能超出父元素的content；浮动元素不能相互覆盖；只在元素所在行浮动。
+- 通过将浮动元素的父元素设置为浮动，可以使父元素包裹浮动元素
+- clear：规定元素的某侧不允许出现float元素。元素会向下移动。
+
+##12. position
+- static：元素呆在文档流中他该呆的位置。不能改变位移
+- relative：在原位置基础偏移，但原空间仍保留
+- absolute：离开文档流，相对于最近的不是static的祖先元素content定位，成为块级元素。
+    - 若位置设为auto，则按照static时的位置。过度受限时优先保证左/上。
+    - 水平和竖直方向的规则均与static块系元素的水平方向类似
+- fixed：离开文档流，以窗口定位
+
+
+
+
+#Learning Resource
+[1] *CSS:The Definitive Guide*, 3th edition. Eric A. Meyer  (no CSS 3)
+[2] MDN: <https://developer.mozilla.org/en-US/docs/Web/CSS>
+[3] W3C: <http://www.w3.org/Style/CSS/>
+[4] W3SCHOOL: <http://www.w3school.com.cn/cssref/index.asp>
