@@ -53,7 +53,7 @@ HTML子元素将继承祖先元素所拥有的属性，可以覆写。
 ###2.2 Class Selector
 ```css
 .className {text-align: center}
-.className1 .className2 {text-align: center} // 同时有两个类，顺低版本IE有兼容问题)
+.className1 .className2 {text-align: center} // 同时有两个类，低版本IE有兼容问题)
 td.fancy {color: #f60;background: #666; } //元素可以基于类而被选择
 ```
 ```html
@@ -126,7 +126,7 @@ a:visited       已访问过
     -  Nonreplaced Element: directly display
 -  block-level & inline-level
     -  block: 占领一行， `<p> <div>`
-    -  inline: 共享一行， `<a> <strong> <em>`
+    -  inline: 共享一行， `<a> <strong> <em> <img>`
 
 ##6. Specification
 选择器的优先级，说的越具体越优先
@@ -146,6 +146,9 @@ h1 {color: #333 !important ;}
 - name: red 
 - RGB: rgb(100%,0%,100%)  rgb(0,100,100)
 - hex: #ff0000  #f00
+- 前景色 & 背景色
+    + 前景色：文字和边框颜色，使用color或border-color等属性设置
+    + 背景色
 
 ###7.3 URL
 - url(path)，相对于css而不是html文件
@@ -156,5 +159,55 @@ none, inherit, ...
 ###7.5 others
 deg, gead, rad, ms, s, Hz, MHz
 
-##8. Font
+##8. Property Tips
 - font：使用一种通用字体作为最后选择（sans-serif）
+- baseline：小写x底端线。
+- text-decoration：不会被后代继承
+- 使用简写属性时，未设置的值会被重置为默认值。
+- 边距按顺时针方向设置值
+
+##9. 盒模型
+- margin-border(>0,non-%)-padding(>0,透明)-content(>0,仅块级和替换元素)。
+- 后三者背景相同，margin通常透明
+- margin/border/padding默认为0，width/height默认auto
+- **width and height指的是content.**
+- 负margin会使元素偏出父元素，但不会影响其他元素的布局。
+- 只有margin、weight/height可设为auto，border和padding不会自适应。
+- 若margin/padding使用百分比，则四个方向都是相对于父元素的width
+- 边距的值复制：T->R->L  T->B,右值不存在时用左值代替。
+- 要使用border记得设置border-style，其默认为none
+
+###9.1 block-level
+- 元素7项水平属性之和必须等于父元素width，允许其中margin属性为负。
+    + 重置margin-right：当水平方向上的margin、width都被限定，七个元素之和不足父元素width（overconstrained），强制margin-right为auto；如果超过，强制margin-right为负数。
+    + 若width为auto，则由元素的padding、margin、border和父元素width关系计算动态得出
+    + 若margin-left和margin-right为auto，则元素居中。
+    + 若margin和width都为auto，margin为0
+
+- 元素7项垂直属性之和小于若大于父元素height，会影响同级元素的显示，对叔伯元素无影响。
+    + 若height为auto，则height由子元素或文字动态决定，不受本身padding、margin、border和父元素height变化影响。
+    + 若margin-top和margin-bottom为auto，则他们为0。
+    + 垂直相邻margin会被合并，两正取最大值，两负取最小值，正负取和。
+    + 若元素height为auto，且未指定padding或border，子元素最外侧的margin-top和margin-bottom会逾越父元素，可视为附加到父元素，并与叔伯们进行margin的合并;若指定了padding或border，会撑起父元素。
+    + 若父元素height为auto，则子元素margin为负时父元素height相应减少，减少到0后margin-bottom无法继续减少，margin-top不受影响。
+    + 若父元素height为定值，则子元素margin为负时父元素height不变，margin-bottom无效，margin-top不受影响。
+    + 如果元素内容高度大于height，由overfolw决定行为.
+ 
+- 对于替换元素，若width/height为auto，则width和height为元素固有宽度。若width或height只指定一个的具体长度，另一个会成比例变化。
+
+###9.2 inline-level
+- Aonymous text：不包含在in-line元素中的字符串
+- 非替换元素：行内框（line-height） = 行间距（leading，上下各半，可为负） + 内容区（同block-level的content，font-size）
+    - em框：每个字符的占有面积，由font-size确定，内容区的组成单位。与实际字形大小有差异，或大或小。
+    - 非替换元素的margin、border、padding不影响行内框高度
+    - 同一行内，文本按baseline对齐，相同line-height下，不同字号的行内框会有位移，行框增大。
+    - 增加padding不会影响line-height；margin-top、margin-bottom无效
+- 替换元素：行内框 = 内容区(content+padding+border+margin)
+    + padding-bottom与baseline对齐
+- 行框：包含一行中所有行内框的最小框。
+
+##10. display——change the way it displays, not the real type
+- block：略
+- inline：略
+- inline-block：类似行内替换元素
+- run-in：使块级元素成为下一个块级元素的行内部分
