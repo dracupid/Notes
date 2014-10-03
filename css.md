@@ -240,7 +240,7 @@ deg, gead, rad, ms, s, Hz, MHz
 
 
 #Learning Resource
-[1] *CSS:The Definitive Guide*, 3th edition. Eric A. Meyer  (no CSS 3)
-[2] MDN: <https://developer.mozilla.org/en-US/docs/Web/CSS>
-[3] W3C: <http://www.w3.org/Style/CSS/>
-[4] W3SCHOOL: <http://www.w3school.com.cn/cssref/index.asp>
+1. *CSS:The Definitive Guide*, 3th edition. Eric A. Meyer  (no CSS 3)
+2. MDN: <https://developer.mozilla.org/en-US/docs/Web/CSS>
+3. W3C: <http://www.w3.org/Style/CSS/>
+4. W3SCHOOL: <http://www.w3school.com.cn/cssref/index.asp>
