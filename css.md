@@ -236,8 +236,14 @@ deg, gead, rad, ms, s, Hz, MHz
     - 水平和竖直方向的规则均与static块系元素的水平方向类似
 - fixed：离开文档流，以窗口定位
 
-
-
+##13. Generated Content
+- 配合:before, :after使用content属性
+- content的值会原样显示，包括HTML标签。使用`\A`换行，使用`\`连接多行字符串
+- 使用attr()引用元素属性
+```css
+a[href]:after {content: "[" attr(href) "]";}
+```
+- 使用counter()和counters()引用计数器的值
 
 #Learning Resource
 1. *CSS:The Definitive Guide*, 3th edition. Eric A. Meyer  (no CSS 3)
