@@ -14,3 +14,11 @@
 # CSS
 1. Always use background-image with background-color together.
     - It really helps when the background image fails to load. Especially when the text is white.
+
+# HTML
+1. Always use prefix `data-` for custom attributes.
+    - Avoid conflicting to new HTML attributes in the future.
+    - You can use specific selector such as $.data() for custom attributes.
+2. Keep in mind that browser is not the only user-agent which will parse your HTML.
+    - Don't forget search engines.
+    - Do what HTML should do.

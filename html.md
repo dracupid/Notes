@@ -8,7 +8,28 @@
 * 应该避免使用物理标签。应当尽可能地向浏览器提供上下文信息，并使用基于内容的样式。如strike sub等
 
 * 连接中，文件夹末尾最好加斜杠。`http://www.w3school.com.cn/html/`。不加斜杠会多产生一次http请求
+* anchor可以使用id来定位
 
-####大多数 HTML 元素被定义为块级元素或内联元素。
-* 块级元素在浏览器显示时，通常会以新行来开始（和结束）。\<div>
-* 内联元素在显示时通常不会以新行开始。\<span>
+##全局属性
+- accesskey；元素获得焦点的快捷键。windows下使用alt + accesskey
+```html
+<element accesskey= char >
+```
+- contenteditable[HTML5]：元素内容可编辑性
+```html
+<element contenteditable="true|false">
+```
+- 
+
+
+## Concepts
+
+- element type：
+    + metadata
+    + flow：phrasing的超集
+    + phrasing：HTML基本成分
+    + 其他
+- HTML entity：浏览器替代特殊字符的代码。
+    + 理解为一种编码，类似UTF-8
+    + 实体编号：&#XX；实体名称：&xx
+- bool attribute：不需要设定值，只需要出现名称。其值是什么都无影响。

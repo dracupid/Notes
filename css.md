@@ -2,12 +2,6 @@
 -------------------------------
 CSS 3 is not included by now.
 
-**优先级从低到高：**
-- 浏览器缺省设置
-- 外部样式表
-- 内部样式表/documeny style sheet/embedded style sheet (`<script type = 'text/css'>`)
-- 内联样式（在 HTML 元素内部）  
-
 包含空格不会影响CSS效果; CSS 对大小写不敏感。不过与 HTML 文档一起工作的话，class 和 id 名称对大小写是敏感的。  
 不要在属性值与单位之间留有空格
 ##1. Grammar
@@ -29,11 +23,11 @@ h1,h2,h3,h4,h5,h6 { color: green;}
 ```
 
 ###1.2 继承
-HTML子元素将继承祖先元素所拥有的属性，可以覆写。
-> 部分属性无法基础，如盒模型边框和尺寸相关的属性。可用常识判断
+- 一般来说与元素外观相关样式（文字、颜色、字体）会被继承，与元素布局相关的样式（盒模型边框和尺寸）不会继承。
+- 可以使用inherit强制继承
 
 ###1.3 包含
-`@import url(XX)`, 用在最前。
+`@import url(XX)`, 必须用在最前。
 ##1.4 创建CSS
 ###（1）外部样式表
 ```html
@@ -131,21 +125,23 @@ a:visited       已访问过
 
 ##6. Specification
 选择器的优先级，说的越具体越优先
+- User-Agent（浏览器）样式 < 用户样式 < 外部样式表 < 内部样式表(document/embedded style sheet) < 内联样式（在 HTML 元素内部） 
 - 内联样式 > ID > 类/属性/伪类 > 元素/伪元素 , 同级则层级深的优先
 - 重要声明优先于普通声明
 ```css
 h1 {color: #333 !important ;}
 ```
-- 都相同则后定义的优先
+- 都相同则后定义的优先, 与class属性的前后无关
 
 ##7. Value and Unit
 ###7.1 Length
 - em: 1em = font-size
-- px
+- px：定义是相对，但都实现为绝对单位
 
 ###7.2 Color
 - name: red 
 - RGB: rgb(100%,0%,100%)  rgb(0,100,100)
+- grba, hsl, hsla： a是不透明度(0-1)，0是全透明
 - hex: #ff0000  #f00
 - 前景色 & 背景色
     + 前景色：文字和边框颜色，使用color或border-color等属性设置
