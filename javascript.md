@@ -6,8 +6,8 @@
 * 大小写敏感
 ###**书写js的位置**
 
-- <script\>标签对中
-- <script\>的src或archive属性中引用外部js文件
+- `<script>`标签对中
+- `<script>`的src或archive属性中引用外部js文件
 - 某个html标记的事件处理器。如<body>的onLoad和onUnload
 
 ##1. 变量和数据类型
@@ -37,10 +37,11 @@
 
 ##2. 函数（Function对象）
 **函数实质也是一个功能完整的对象**
-
+```javascript
 	function funName(args){}	等价于
 	var funName = new Function("args","函数体") //可以动态生成程序
 	funName = function(args){} //????
+```
 - 可以传递函数名作为参数
 - 如果函数无明确的返回值，或调用了无参return，那么返回undefined。
 - 支持函数嵌套
