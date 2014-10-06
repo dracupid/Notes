@@ -1,15 +1,16 @@
 
 - Description
-- Case Sensitive？
-- Statement Terminations？
+- Delimiter
 - Comment
 
 
 
 ##1. Type System（类型系统）
-- Dynamic or not
-###1.1 Variable
-- Define
+- Dynamic Type or not
+- Type check
+###1.1 Variable（变量）
+- Define and Assign
+- Declare
 - Delete
 - Null
 ###1.2 Primitive Type（原生类型）
@@ -19,16 +20,21 @@
 
 ##2. Statement and Expression（语句和表达式）
 ###2.1 Scope（作用域）
-###2.2 Operator（运算符）
+###2.2 Operator（运算符） [priority order]
+- Unary
+- String
+- Arithmetic
 - Assignment
 - relational
 - Logic
 - Bit
+- Ternary
+
 ###2.3 Branch（分支）
 ###2.4 Loop（循环）
 ###2.5 Context（上下文）
 - With
-- 
+
 ##3. Modularity（模块化）
 ##3.1 Module/Package
 ##3.2 import/include
@@ -37,7 +43,8 @@
 - Definition（定义）
 - Peculiarity（特点）
 ###4.1 Membership（成员）
-- Term for different members
+- Term for different members(attribute?property?)
+- Check
 - Static Member
 - This/Self
 ###4.2 Class（类）
@@ -45,8 +52,8 @@
 - Create/Instantiation
 - Delete
 ###4.4 Object Access（对象访问）
-- Read
-- Write
+- Read/Write
+- Create
 - Delete
 - Iteration
 - Access Control
@@ -58,8 +65,10 @@
 
 
 ##5. Function（函数）
+-First class?
 ###5.1 Define（定义）
-###5.2 Argumant（参数）
+###5.2 Argumesnt（参数）
 ###5.3 Return（返回值）
-
+###5.4 Override（重载）
 ##6. Exception（异常）
+- Pattern: try-throw-catch?

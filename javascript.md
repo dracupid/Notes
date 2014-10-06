@@ -1,50 +1,130 @@
 #JavaScript#
 ------------------
-* JavaScript=ECMAScript+BOM+DOM
+* JavaScript = ECMAScript + BOM + DOM
 * 基于对象，不支持自定义的对象
-* 分号可选
-* 大小写敏感
-###**书写js的位置**
+* Delimiter: `;(optional) {} ()`
+* Comment: `// and /**/`
 
+###书写js的位置
 - `<script>`标签对中
 - `<script>`的src或archive属性中引用外部js文件
 - 某个html标记的事件处理器。如<body>的onLoad和onUnload
 
-##1. 变量和数据类型
-	var hello;
-> 重复声明不产生影响<br/>
-> 声明不是必需的
+##1. Type System
+- Dynamic Type
+- Type Check:
+###1.1 Variable
+- Define and Assign：Definition is Optional 
+```javascript
+var hello   // local variable
+hello = ""  // global variable
+```
+- Declare: No
+- Delete
+- Null: `null`
+###1.2 Primitive Type
+* Undefined：只有undefined一个值，是未初始化变量的类型。用typeof时也是未定义变量的值。使用void()可以将任何值控制为undefined，用于避免不必要的返回值。
+* Null：只有null一个值。是对象的类型。
+* Boolean：`true | false`（逻辑对象无初始值或者其值为 0、-0、null、""、false、undefined、NaN）
+* Number：一律为64为浮点数；精度整数15位，小数17位
+	*  NaN：not a number——isNaN() ；**NaN与自己不相等！**
+* String：Unicode，`'' or ""`；不可变。
+
+> Boolean, Number, String类型的变量是伪对象（也有相应的真对象，可以看做包装器），可以使用一些属性和方法 [数字调用方法要加括号]
+> 在表现形式上，Array, RegExp和primitive type是一致的，都有一个字面量，可以当作对象使用
+###1.3 Reference Type（引用类型）
+###1.4 Type Conversion（类型转换）
+* ，可以toString。
+* 使用Name()格式通过创建对象的方式强制类型转换
+
+- Convert Anything To String
+    - `toString()`
+- Convert Number To String
+    - `toString([base = 10])` 
+    - `toFixed(n)` 保留n位小数
+    - `toExponential(n)` 指数表示法,保留n位小数
+    - `toPrecision(n)` n位有效数字
+- Convert String to Number
+    - `parseInt(str)``parseFloat()`
+        -  自动忽略数字后的非数字字符
+
+
+###1.5 Memory Model（内存模型）
+
 ###数据类型（动态）
 * 引用类型：数组、对象
-* Primitive Type：Undefined、Null、Boolean、Number 和 String
 * 查看变量类型：`typeof x`
 * 查看对象类型：`a instanceof b`
 > typeof 运算符对于 null 值会返回 "Object"。(bug,把null视为对象占位符，本质还是原始类型)<br/>
 
-####Primitive Type
-* Undefined：只有undefined一个值，是未初始化变量的类型。用typeof时也是未定义变量的值。使用void()可以将任何值控制为undefined，用于避免不必要的返回值。
-* Null：只有null一个值。比较上等同于undefined。是对象的类型。
-* Boolean：true/false（逻辑对象无初始值或者其值为 0、-0、null、""、false、undefined、NaN）
-* Number：34 34.00 123e5；一律为64为浮点数；精度整数15位，小数17位
-	*  NaN：not a number——isNaN() ；**NaN与自己不相等！**
-* String：Unicode，单双引号等价；不可变。
-####类型转换
-* Boolean,Number,String类型的值是伪对象（也有相应的真对象，可以看做包装器），可以使用一些属性和方法，可以toString。
-* parseInt() 和 parseFloat()讲字符串转换成数字。能转多少就转多少，不要求字符串全是数字。
-* 使用Name()格式强制类型转换
+
 ###内存模型
 * 原始类型在栈，引用类型在堆
 
+
+##2. Statement and Expression（语句和表达式）
+###2.1 Scope（作用域）
+###2.2 Operator（运算符）
+- Unary: `+ -`
+- String: `+`
+    - Can be used to convert String to Number
+    - `Number + String` is always String because of the priority, whatever the order is.
+- Arithmetic: ` + - * / %`
+- Assignment: `=`
+- relational: `== != === !=== >= > <= <`
+    - `===`： No type convertion
+    - 两个对象比较的是引用（地址），两种等于无差别
+    
+- Logic: `&& || !`
+- Bit
+- Ternary: `?:`
+###2.3 Branch（分支）
+###2.4 Loop（循环）
+###2.5 Context（上下文）
+- With
+
+
+##运算符
+
+* ！返回boolean，可以用!!将值转化为boolean类型
+* &&不一定返回boolean：
+	* obj && bool——obj；
+	* obj1 && obj2——obj2；
+	* 有null——null
+	* 有NaN——NaN
+	* 有undefined——error
+* ||不一定返回boolean
+	* false || false || obj——obj
+	* obj1 || obj2——obj2
+	* false || false || null——null
+	* false || false || NaN——NaN
+	* 有undefined——error
+* 字符串可用关系运算比较。字符串与数字比较会把字符串转换成数字
+* 如果把数字与字符串相加，结果将成为字符串<br/>
+
+
+##5. Function（函数）
+- First Class
+- Actually, functions are `Function` objects
+###5.1 Define
+```javascript
+	function funName(args){}    // Normal definition
+	funName = function(args){}  // Anonymous function and Assignment
+	var funName = new Function("args","funBody") //可以动态生成程序
+```
+- Definition can be nested.
+###5.2 Argument
+- Actual arguments can be less or more than definition
+- Default value is undefined
+###5.3 Return（返回值）
+- `return` a value
+- `rerurn` without a value or no `return`——`undefined`
+###5.4 Override
+- No
+
 ##2. 函数（Function对象）
 **函数实质也是一个功能完整的对象**
-```javascript
-	function funName(args){}	等价于
-	var funName = new Function("args","函数体") //可以动态生成程序
-	funName = function(args){} //????
-```
-- 可以传递函数名作为参数
-- 如果函数无明确的返回值，或调用了无参return，那么返回undefined。
-- 支持函数嵌套
+
 ###agguments[]
 在函数代码中，使用arguments数组，无需明确指出参数名，就能访问参数。
 > js不对参数个数进行检验
@@ -52,6 +132,53 @@
 length：定义的参数个数
 ###闭包
 闭包，指的是词法表示包括不被计算的变量的函数，也就是说，函数可以使用函数之外定义的变量。
+
+
+##4. Object（对象）
+- Definition（定义）
+- Peculiarity（特点）
+###4.1 Membership（成员）
+- Term for different members
+- Check
+```javascript
+"propertyName" in obj
+```
+- Static Member
+- This/Self
+###4.2 Class（类）
+###4.3 Object Creation and Deletion（对象创建与删除）
+- Create/Instantiation
+```javascript
+objName = new Object(args);	// () is optional when there's no args
+objName = {attrA:value, attrB:value...};//创建+赋值,对象字面量
+```
+
+###4.4 Object Access（对象访问）
+- Read/Write
+```javascript
+objName.name
+objName[name]	// name can be a string variable
+```
+> Object can be used as a map or dictionary
+
+- Create: Just write. 
+- Delete
+```javascript
+delete objName.attrA； //只能删除自己定义的
+```
+- Iteration
+```javascript
+for(var name in obj){ 	// 'name' is not the value of a property. 
+	alert(obj[name])	
+}
+```
+- Access Control
+###4.5 Constructor（构造函数）
+###4.6 Destructor and Garbage Collection（析构函数与垃圾回收）
+###4.7 Inheritance（继承）
+###4.8 Abstract Class and Interface（抽象类与接口）
+###4.9 Polymorphic（多态）
+
 
 ##3. Object
 * 复合数据类型或属性/方法集合
@@ -68,11 +195,6 @@ length：定义的参数个数
 宿主对象：宿主环境提供的对象吗，如DOM何BOM对象
 ###私有
 只有public对象，使用_name_命名来约定为私有变量
-###创建
-```javascript
-var objectName = new Object();	//无参数可省略括号
-var objectName = {attrA:value, attrB:value...};//创建+赋值,对象字面量
-```
 ####构造函数（对象构造器）——无法共享函数
 ```javascript
 function objName(args...){	
@@ -117,23 +239,7 @@ function Car(sColor,iDoors,iMpg) {
 }
 ```
 * 原型最大的作用是对非自定义对象进行修改。！
-###对象读写
-```javascript
-objectName.attrName		//attrName固定
-objectName[attrName]	//attrName可是变量
-```
-- 类似于数组，构造时不存在的属性也可以创建赋值
-###删除属性/方法
-```javascript
-delete objectName.attrA； //只能删除自己定义的
-objectName.attrA=null；	//二者不等价
-```
-###遍历属性
-```javascript
-for(var a in objectName){ 	//a是属性的名字
-	alert(objectName[a])	//输出属性值
-}
-```
+
 * 将对象内部想象成map，遍历的是key（属性名称）
 ###继承
 * 只有自定义的类可以做基类。
@@ -213,14 +319,15 @@ ClassB.prototype.sayName = function () {
 ##5. 数组
 动态增长，0-index。
 理解成属性名为0-n的一个对象。
-###创建
+###Create/Instantiation
 ```javascript
-var arrayName = new Array();
-var arrayName = new Array(size);
-var arrayName = new Array(d1,d2,d3...);
-var arrayName = [d1,d2,d3...];
+var arrName = new Array([size]);
+var arrName = new Array(d1,d2,d3...);
+var arrName = [d1,d2,d3...];
 ```
-###赋值
+###Access
+- Items can have different types.
+- Dynamic growth.
 ```javascript
 arrayName[5]=78;	//创建空间（首次访问）并赋值
 arrayName.length	//数组长度
@@ -232,20 +339,6 @@ arrayName.length	//数组长度
 a.toString() 等价于 a.ValueOf()	//,分隔
 a.join("分隔符")	//数组元素按指定分隔符分隔输出
 ```
-###堆栈操作
-	a.push("");
-	a.pop();
-###队列操作
-	a.push("");
-	a.shift();	
-###排序
-	a.sort();
-	a.sort(compareFunction);
-	a.reverse();
-###其他
-	b=a.concat(a1,a2...)   //连接a,a1,a2
-	b=a.slice(m,n)		//截取从m到n-1
-	splice(开始位置，删除个数，插入元素...) //删除并插入
 ###6. 语句
 * 循环语句支持 `for x in xs`
 * 可以使用标签标记语句块。
@@ -274,16 +367,14 @@ function validate_required(field,alerttxt)
 	}
 }
 ```
-###7. try-throw-catch异常
+###7. Exception
+try-throw-catch-finally异常
 ```javascript
 try{
 	throw "error message"
-}
-catch(err)//不需要想java一样声明类型
-{
-	txt="There was an error on this page.\n\n" + err.message + "\n\n";
-	alert(txt);
-}
+}catch(e){
+    console.log(e.message)
+}finally{}
 ```
 ##8. window
 window是浏览器的全局对象，所有的全局变量/函数都是window的成员。
@@ -355,24 +446,3 @@ window.screen 对象包含有关用户屏幕的信息。
 
 
 
-
-##运算符
-* +/-string可以把字符串转化为数字
-* 位运算和逻辑运算同java
-* ！返回boolean，可以用!!将值转化为boolean类型
-* &&不一定返回boolean：
-	* obj && bool——obj；
-	* obj1 && obj2——obj2；
-	* 有null——null
-	* 有NaN——NaN
-	* 有undefined——error
-* ||不一定返回boolean
-	* false || false || obj——obj
-	* obj1 || obj2——obj2
-	* false || false || null——null
-	* false || false || NaN——NaN
-	* 有undefined——error
-* 字符串可用关系运算比较。字符串与数字比较会把字符串转换成数字
-* 如果把数字与字符串相加，结果将成为字符串<br/>
-* `===`：全等于，无需类型转换运算数就相等，值和类型都相等。
-* 可用三元条件运算
