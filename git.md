@@ -1,8 +1,9 @@
 #Git教程#
 ----------
-##1. 安装Git##
-	Linux：sudo apt-get install git
-	windows：msysgit 
+
+![](http://image.beekka.com/blog/2014/bg2014061202.jpg)
+
+##1. 配置Git##
 ###初始化用户信息
 	git config --global user.name "Your Name"
 	git config --global user.email "email@example.com"
@@ -78,37 +79,48 @@
 	git remote add origin git@github.com:dracupid/仓库名称.git
 >远程库的名字就是origin，这是Git默认的叫法，也可以改成别的  
 >也可以使用https（速度慢，每次输口令），一般用ssh  
-###查看远程仓库信息
-	git remote [-v]
+###远程仓库管理
+	git remote [-v] //-v 查看网址	
+	git remote show/rm <hostname>
+	git remote add <hostname> <Repo Address>
+	git remote rename <o_hostname> <n_hostname>
 
->-v查看详细信息
+###获取最新版本
+	git fetch <hostname> <branch>
+	git merge <branch> //合并到当前分支
+
+	git pull <hostname> <remote branch>[:<local branch>]
+> pull相当于fetch + merge
+
+
 ###指定本地分支与远程分支的关联
 	git branch --set-upstream branchName origin/branchName
-###推送/上传
-首次推送
-	
-	git push -u origin branchName/tagName
->把当前分支master推送到远程，-u是remember the parameters
+###推送/上传	
+	git push <hostname> [<local branch>]:<remote branch>
+	git push <hostname> --delete <remote branch> //删除
+>-u是remember the parameters，首次推送使用
 
 普通推送
 
 	git push origin branchName/tagName
 	git push origin --tags 			//推送所有标签
-###克隆/本地抓取
-	git clone git@github.com:dracupid/仓库名称.git
+###克隆
+	git clone <Repo Address> [<Local Floder Name>]
 
 >clone只抓取master分支
+>-o 重命名master
 ###克隆其他分支
 	git checkout -b branchName origin/branchName
-###获取最新版本（merge）
-	git pull
+
 ##8. 分支
 >每个分支当做一个指针
 
-查看所有分支，*为当前分支
+查看所有分支
 
 	git branch
-**创建分支**
+> -r 查看远程分支
+> -a 查看所有分支
+**创建本地分支**
 
 	git branch branchName
 **切换分支**
@@ -118,7 +130,7 @@
 
 **创建并切换分支**（等价于前两个）
 	
-	git checkout -b branchName
+	git checkout -b branchName [<remote branch>]
 **合并分支**
 >将分支A合并到当前分支（指针移动）——fast-forword  
 >若合并时有冲突，则将冲突处标识出放入工作区，需自己检查后再次提交完成合并

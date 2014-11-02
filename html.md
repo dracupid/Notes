@@ -24,11 +24,6 @@
 
 ## Concepts
 
-- element type：
-    + metadata
-    + flow：phrasing的超集
-    + phrasing：HTML基本成分
-    + 其他
 - HTML entity：浏览器替代特殊字符的代码。
     + 理解为一种编码，类似UTF-8
     + 实体编号：&#XX；实体名称：&xx

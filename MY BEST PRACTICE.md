@@ -21,4 +21,4 @@
     - You can use specific selector such as $.data() for custom attributes.
 2. Keep in mind that browser is not the only user-agent which will parse your HTML.
     - Don't forget search engines.
-    - Do what HTML should do.
+    - Use semantic HTML tags more. Do what HTML should do.
