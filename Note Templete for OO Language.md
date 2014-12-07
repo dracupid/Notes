@@ -9,10 +9,13 @@
 - Dynamic Type or not
 - Type check
 ###1.1 Variable（变量）
+- Naming
 - Define and Assign
+    + Initial Value
 - Declare
 - Delete
-- Null
+- Null Value
+- Hoisting
 ###1.2 Primitive Type（原生类型）
 ###1.3 Reference Type（引用类型）
 ###1.4 Type Conversion（类型转换）

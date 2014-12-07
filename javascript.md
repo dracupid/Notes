@@ -13,29 +13,47 @@
 ##1. Type System
 - Dynamic Type
 - Type Check:
+    * Variable Type：`typeof x`
+        * x can be an undefined variable.
+        * `typeof null` is `object` (bug)
+    * Object Class：`a instanceof b`
+    * Object.prototype.toString
 ###1.1 Variable
 - Define and Assign：Definition is Optional 
+    - Initial Value: `undefined`
 ```javascript
 var hello   // local variable
-hello = ""  // global variable
+hello = ""  // global variable, actually this is an assignment.
 ```
-- Declare: No
+- Declare: No.
 - Delete
-- Null: `null`
+- Null Value: `null`
+- Hoisting: yes
 ###1.2 Primitive Type
 * Undefined：只有undefined一个值，是未初始化变量的类型。用typeof时也是未定义变量的值。使用void()可以将任何值控制为undefined，用于避免不必要的返回值。
 * Null：只有null一个值。是对象的类型。
-* Boolean：`true | false`（逻辑对象无初始值或者其值为 0、-0、null、""、false、undefined、NaN）
+* Boolean：`true | false`（false: 0、-0、null、""、false、undefined、NaN）
 * Number：一律为64为浮点数；精度整数15位，小数17位
-	*  NaN：not a number——isNaN() ；**NaN与自己不相等！**
-* String：Unicode，`'' or ""`；不可变。
+    *  NaN：not a number
+        *  **NaN不等于任何值，包括其本身（唯一不等于其本身的）！**
+        *  NaN与任何值运算结果都是NaN
+        *  使用`a ！== a`判断，isNaN()不可靠
+    * Infinity：有正负之分
+* String：Unicode，`'' or ""`；不可变。 
+    * 可被视为字符数组读取，但不能用这种方式删改。 
 
 > Boolean, Number, String类型的变量是伪对象（也有相应的真对象，可以看做包装器），可以使用一些属性和方法 [数字调用方法要加括号]
 > 在表现形式上，Array, RegExp和primitive type是一致的，都有一个字面量，可以当作对象使用
+
 ###1.3 Reference Type（引用类型）
+引用类型的值是地址
+- Array
+- Function
+- Object
+
 ###1.4 Type Conversion（类型转换）
-* ，可以toString。
-* 使用Name()格式通过创建对象的方式强制类型转换
+* 可以toString。
+* 使用TypeName()格式通过创建对象的方式强制类型转换
 
 - Convert Anything To String
     - `toString()`
@@ -45,26 +63,21 @@ hello = ""  // global variable
     - `toExponential(n)` 指数表示法,保留n位小数
     - `toPrecision(n)` n位有效数字
 - Convert String to Number
-    - `parseInt(str)``parseFloat()`
+    - `parseInt(str， radix) parseFloat()`
         -  自动忽略数字后的非数字字符
 
 
 ###1.5 Memory Model（内存模型）
-
-###数据类型（动态）
-* 引用类型：数组、对象
-* 查看变量类型：`typeof x`
-* 查看对象类型：`a instanceof b`
-> typeof 运算符对于 null 值会返回 "Object"。(bug,把null视为对象占位符，本质还是原始类型)<br/>
-
-
-###内存模型
 * 原始类型在栈，引用类型在堆
+
 
 
 ##2. Statement and Expression（语句和表达式）
 ###2.1 Scope（作用域）
+
 ###2.2 Operator（运算符）
+Auto type conversion.
+
 - Unary: `+ -`
 - String: `+`
     - Can be used to convert String to Number
@@ -74,33 +87,51 @@ hello = ""  // global variable
 - relational: `== != === !=== >= > <= <`
     - `===`： No type convertion
     - 两个对象比较的是引用（地址），两种等于无差别
-    
-- Logic: `&& || !`
+    - string is comparable.
+- Logic: `&& || !`  
+    - ！返回boolean，可以用!!将值转化为boolean类型
+    * &&不一定返回boolean：
+        * obj && bool——obj；
+        * obj1 && obj2——obj2；
+        * 有null——null
+        * 有NaN——NaN
+        * 有undefined——error
+    * ||不一定返回boolean
+        * false || false || obj——obj
+        * obj1 || obj2——obj2
+        * false || false || null——null
+        * false || false || NaN——NaN
+        * 有undefined——error
 - Bit
 - Ternary: `?:`
 ###2.3 Branch（分支）
+```javascript
+if(expression){
+    statements
+}else{
+}
+```
+- For one statement, braces can be omitted.
+```javascript
+switch(expression){
+    case expression :
+    default:
+}
+```
+- Use `===` to compare.
 ###2.4 Loop（循环）
+```javascript
+while(expression){}
+
+for(initialize; test; increment){}
+
+do{
+}while(expression);
+```
+- For one statement, braces can be omitted.
+- `break` and `continue`, with label.
 ###2.5 Context（上下文）
 - With
-
-
-##运算符
-
-* ！返回boolean，可以用!!将值转化为boolean类型
-* &&不一定返回boolean：
-	* obj && bool——obj；
-	* obj1 && obj2——obj2；
-	* 有null——null
-	* 有NaN——NaN
-	* 有undefined——error
-* ||不一定返回boolean
-	* false || false || obj——obj
-	* obj1 || obj2——obj2
-	* false || false || null——null
-	* false || false || NaN——NaN
-	* 有undefined——error
-* 字符串可用关系运算比较。字符串与数字比较会把字符串转换成数字
-* 如果把数字与字符串相加，结果将成为字符串<br/>
 
 
 ##5. Function（函数）
@@ -108,9 +139,9 @@ hello = ""  // global variable
 - Actually, functions are `Function` objects
 ###5.1 Define
 ```javascript
-	function funName(args){}    // Normal definition
-	funName = function(args){}  // Anonymous function and Assignment
-	var funName = new Function("args","funBody") //可以动态生成程序
+    function funName(args){}    // Normal definition
+    funName = function(args){}  // Anonymous function and Assignment
+    var funName = new Function("args","funBody") //可以动态生成程序
 ```
 - Definition can be nested.
 ###5.2 Argument
@@ -128,6 +159,7 @@ hello = ""  // global variable
 ###agguments[]
 在函数代码中，使用arguments数组，无需明确指出参数名，就能访问参数。
 > js不对参数个数进行检验
+
 ###属性
 length：定义的参数个数
 ###闭包
@@ -136,20 +168,33 @@ length：定义的参数个数
 
 ##4. Object（对象）
 - Definition（定义）
+复合数据类型或属性/方法集合，本质是key-value map
+    - 如果key不是标准的变量命名，则必须加引号，否则引号可选。
+
+```javascript
+var obj = {
+    key1: value1,
+    'key2': value2
+}
+```
 - Peculiarity（特点）
 ###4.1 Membership（成员）
 - Term for different members
+    - Property: All members
+    - Method: Function members.
 - Check
 ```javascript
 "propertyName" in obj
 ```
-- Static Member
+- Static Member: No
+    - 但可以通过给构造函数（对象）添加成员方法实现类似效果
 - This/Self
+
 ###4.2 Class（类）
 ###4.3 Object Creation and Deletion（对象创建与删除）
 - Create/Instantiation
 ```javascript
-objName = new Object(args);	// () is optional when there's no args
+objName = new Object(args); // () is optional when there's no args
 objName = {attrA:value, attrB:value...};//创建+赋值,对象字面量
 ```
 
@@ -157,21 +202,23 @@ objName = {attrA:value, attrB:value...};//创建+赋值,对象字面量
 - Read/Write
 ```javascript
 objName.name
-objName[name]	// name can be a string variable
+objName[name]   // name can be a expression which products a string
 ```
 > Object can be used as a map or dictionary
 
 - Create: Just write. 
 - Delete
 ```javascript
-delete objName.attrA； //只能删除自己定义的
+delete objName.attrA； //只能删除自己定义的，非继承的属性
 ```
 - Iteration
+    - enumberable properties
 ```javascript
-for(var name in obj){ 	// 'name' is not the value of a property. 
-	alert(obj[name])	
+for(var key in obj){    // 'key' is not the value of a property. 
+    console.log(obj[key])   
 }
 ```
+
 - Access Control
 ###4.5 Constructor（构造函数）
 ###4.6 Destructor and Garbage Collection（析构函数与垃圾回收）
@@ -181,12 +228,8 @@ for(var name in obj){ 	// 'name' is not the value of a property.
 
 
 ##3. Object
-* 复合数据类型或属性/方法集合
 * JavaScript 基于 prototype，而不是基于类的。
-* 没有static，
-* 
 
-但可以通过给构造函数（对象）添加成员方法实现类似效果。
 
 
 ###类型
@@ -197,9 +240,9 @@ for(var name in obj){ 	// 'name' is not the value of a property.
 只有public对象，使用_name_命名来约定为私有变量
 ####构造函数（对象构造器）——无法共享函数
 ```javascript
-function objName(args...){	
-	this.attrA=value;	//引用对象的成员时，必须使用 this 关键字
-	this.methodA=function(){};	
+function objName(args...){  
+    this.attrA=value;   //引用对象的成员时，必须使用 this 关键字
+    this.methodA=function(){};  
 }
 var x = new objName(a,b...)
 ```
@@ -207,11 +250,11 @@ var x = new objName(a,b...)
 - this指代调用该方法的对象
 ####原型方式——无法传递参数
 ```javascript
-function Name(args...){						
+function Name(args...){                     
 }
 Name.prototype.attrA="";
 Name.prototype.methodA=function(){};
-var x=name();	//Name的原型的所有属性都被立即赋予要创建的对象
+var x=name();   //Name的原型的所有属性都被立即赋予要创建的对象
 x.attrA="**";
 ```
 * prototype是个默认new了的对象，可以用对象的赋值方法。
@@ -220,7 +263,7 @@ x.attrA="**";
 ####原型混合构造函数——主要使用，综合两种的优点
 ```javascript
 function Name(args...){
-	this.attrA="";				
+    this.attrA="";              
 }
 Name.prototype.methodA=function(){};
 var x=name();
@@ -248,7 +291,7 @@ function Car(sColor,iDoors,iMpg) {
 ```javascript
 function ClassB(sColor, sName) {
     this.newMethod = ClassA;
-    this.newMethod(sColor);  	//调用构造函数但不创建新变量
+    this.newMethod(sColor);     //调用构造函数但不创建新变量
     delete this.newMethod;
 
     this.name = sName;
@@ -258,11 +301,11 @@ function ClassB(sColor, sName) {
 }
 ```
 * 前三行可以用一下函数替换
-	* `ClassA.call(this, sColor);`		//每个参数都是call的参数
-	* `ClassA.apply(this, new Array(sColor))`;//参数数组是call的参数，arguments[]
+    * `ClassA.call(this, sColor);`      //每个参数都是call的参数
+    * `ClassA.apply(this, new Array(sColor))`;//参数数组是call的参数，arguments[]
 ####原型链（不支持多继承）
 ```javascript
-	ClassB.prototype = new ClassA();	//不能有参数
+    ClassB.prototype = new ClassA();    //不能有参数
 ```
 * 类型检测时可以同时具备父类型和子类型
 ####混合方式
@@ -318,7 +361,7 @@ ClassB.prototype.sayName = function () {
 * 正则表达式
 ##5. 数组
 动态增长，0-index。
-理解成属性名为0-n的一个对象。
+本质是属性名为index的一个对象。
 ###Create/Instantiation
 ```javascript
 var arrName = new Array([size]);
@@ -329,16 +372,20 @@ var arrName = [d1,d2,d3...];
 - Items can have different types.
 - Dynamic growth.
 ```javascript
-arrayName[5]=78;	//创建空间（首次访问）并赋值
-arrayName.length	//数组长度
+arrayName[5]=78;    //创建空间（首次访问）并赋值
+arrayName.length    //数组长度
 ```
 * 开始时有size，也可以增长。
 * .length可写，进行拓展或截断（不可复原）数组
 ###数组转换成字符串
 ```javascript
-a.toString() 等价于 a.ValueOf()	//,分隔
-a.join("分隔符")	//数组元素按指定分隔符分隔输出
+a.toString() 等价于 a.ValueOf()    //,分隔
+a.join("分隔符")   //数组元素按指定分隔符分隔输出
 ```
+### Array-like Objects
+有数字键和length属性
+arguments对象，以及大多数DOM元素集，还有字符串。
+
 ###6. 语句
 * 循环语句支持 `for x in xs`
 * 可以使用标签标记语句块。
@@ -348,9 +395,9 @@ a.join("分隔符")	//数组元素按指定分隔符分隔输出
 ```javascript
 list:
 {
-	document.write(cars[0] + "<br>");
-	break list;
-	document.write(cars[3] + "<br>");
+    document.write(cars[0] + "<br>");
+    break list;
+    document.write(cars[3] + "<br>");
 }
 ```
 * with语句：设置语句块的默认对象（避免使用）<br/>
@@ -359,19 +406,19 @@ list:
 ```javascript
 function validate_required(field,alerttxt)
 {
-	with (field)
-	{
-		if (value==null||value=="")
-			{alert(alerttxt);return false}
-		else {return true}
-	}
+    with (field)
+    {
+        if (value==null||value=="")
+            {alert(alerttxt);return false}
+        else {return true}
+    }
 }
 ```
 ###7. Exception
 try-throw-catch-finally异常
 ```javascript
 try{
-	throw "error message"
+    throw "error message"
 }catch(e){
     console.log(e.message)
 }finally{}
@@ -379,13 +426,13 @@ try{
 ##8. window
 window是浏览器的全局对象，所有的全局变量/函数都是window的成员。
 使用window中对象时可以省略window.
-	var a;
-	a与window.a等价
+    var a;
+    a与window.a等价
 ###简单对话框
 ```javascript
 alert("文本");
-confirm("文本");			//选择是否
-prompt("文本","默认值");	//输入框
+confirm("文本");          //选择是否
+prompt("文本","默认值"); //输入框
 ```
 ###状态栏
 ```javascript
@@ -395,7 +442,7 @@ window.defaultStatus
 ###定时器
 ```javascript
 setInterval("js代码",时间间隔ms) //每隔一段时间做
-setTimeout("js代码",时间间隔ms)	//一段时间后做
+setTimeout("js代码",时间间隔ms)   //一段时间后做
 clearTimeout(setTimeout_variable)     //取消setTimeout
 ```
 ###窗口控制
@@ -407,15 +454,15 @@ window.moveTo(x,y);
 ###窗口大小
 ```javascript
 var w=window.innerWidth
-	|| document.documentElement.clientWidth
-	|| document.body.clientWidth;
+    || document.documentElement.clientWidth
+    || document.body.clientWidth;
 ```
 ##9. window.document
 **window.document**，浏览器窗口中的html页面
 ###获取html元素
 ```javascript
-getElementsByName("");	//在html标签中定义name属性
-getElementsById("");	//名字不能重复，ID可以重复
+getElementsByName("");  //在html标签中定义name属性
+getElementsById("");    //名字不能重复，ID可以重复
 ```
 ###image对象
 - document中有image数组
