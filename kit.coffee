@@ -4,6 +4,13 @@
 isNaN = (val)->
 	val isnt val
 
+floor = (num)->
+	~~num
+
+rgb2Hex = (r, g, b)->
+	'#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).substr(1)
+
+
 ###
 UTF-16有两种长度：
 对于U+0000到U+FFFF之间的字符，长度为16位（即2个字节）；
@@ -46,4 +53,44 @@ class ArrayLike
 
 ArrayLike.toArray = Array::toArray
 ArrayLike.forEach = Array::forEacgh
+
+argsToArray = ->
+	Array::concat.apply [], arguments.callee.caller.arguments
+
+class Flag
+	constructor: ()->
+		@flagNum = 0
+		@flagState = 0
+
+	add: (flagArr)->
+		flagArr.forEach (flag)->
+			@flagMap[flag] = 1 << @flagNum++
+
+	mask: (flagArr)->
+		flagArr.map (flagName)->
+			@flagMap[flagName]
+		.reduce (total, cur)->
+			total | cur
+
+	turnOnAll: ()->
+		@flagState = if @flagNum then -1 >>> (32 - @flagNum) else 0
+	turnOn: (flagArr)->
+		@flagState |= @mask flagArr
+	turnOffAll: ()->
+		@flagState = 0
+	turnOff: (flagArr)->
+		@flagState &= ~(@mask flagArr)
+
+	setAs: (flagArr)->
+		@flagState &= @mask flagArr
+	toggleAll: ()->
+		@flagState = ~flags
+	toggle: (flagArr)->
+		@flagState ^= @mask flagArr
+
+	checkOn: (curState, flag)->
+		curState & @flagMap[flag]
+	checkOff: (curState, flag)->
+		not @checkOn curState, flag
+
 

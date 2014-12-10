@@ -18,6 +18,7 @@
         * `typeof null` is `object` (bug)
     * Object Class：`a instanceof b`
     * Object.prototype.toString
+
 ###1.1 Variable
 - Define and Assign：Definition is Optional 
     - Initial Value: `undefined`
@@ -29,6 +30,21 @@ hello = ""  // global variable, actually this is an assignment.
 - Delete
 - Null Value: `null`
 - Hoisting: yes
+```javascript
+console.log(a);
+var a = 10;
+var fun = function(){}
+function fun1(){}
+```
+Is the same as
+```javascript
+var a, fun;
+function fun1(){}
+console.log(a);
+a = 10;
+fun = function(){}
+```
+
 ###1.2 Primitive Type
 * Undefined：只有undefined一个值，是未初始化变量的类型。用typeof时也是未定义变量的值。使用void()可以将任何值控制为undefined，用于避免不必要的返回值。
 * Null：只有null一个值。是对象的类型。
@@ -65,7 +81,10 @@ hello = ""  // global variable, actually this is an assignment.
 - Convert String to Number
     - `parseInt(str， radix) parseFloat()`
         -  自动忽略数字后的非数字字符
-
+- Conver any to Number
+    + `+any`
+    + `-(-any)`
+    + `+{} --> NaN` `+[] --> 0`
 
 ###1.5 Memory Model（内存模型）
 * 原始类型在栈，引用类型在堆
@@ -83,27 +102,28 @@ Auto type conversion.
     - Can be used to convert String to Number
     - `Number + String` is always String because of the priority, whatever the order is.
 - Arithmetic: ` + - * / %`
-- Assignment: `=`
+- Assignment: `=` and `+= -= *= /= %= >>= <<= >>>= &+ |+ ^=`
 - relational: `== != === !=== >= > <= <`
+    - `==`: Auto type convertion
     - `===`： No type convertion
     - 两个对象比较的是引用（地址），两种等于无差别
     - string is comparable.
 - Logic: `&& || !`  
     - ！返回boolean，可以用!!将值转化为boolean类型
-    * &&不一定返回boolean：
-        * obj && bool——obj；
-        * obj1 && obj2——obj2；
-        * 有null——null
-        * 有NaN——NaN
-        * 有undefined——error
-    * ||不一定返回boolean
-        * false || false || obj——obj
-        * obj1 || obj2——obj2
-        * false || false || null——null
-        * false || false || NaN——NaN
-        * 有undefined——error
-- Bit
+    * a && b：
+        - if a is true, reutrn b
+        - if a is false, return a
+    * a || b:
+        - if a is true, return a
+        - if a is false, return b
+- Bit: `| & ~ ^ << >> >>>`
+    + 进行位运算时，会被转化为32位整数
 - Ternary: `?:`
+
+Else
+- 圆括号:如果把表达式放在圆括号之中，作用是求值；如果跟在函数的后面，作用是调用函数。
+- `void`: 执行一个表达式，然后返回undefined。
+- `,`：对两个表达式求值，并返回后一个表达式的值
 ###2.3 Branch（分支）
 ```javascript
 if(expression){
@@ -119,6 +139,7 @@ switch(expression){
 }
 ```
 - Use `===` to compare.
+
 ###2.4 Loop（循环）
 ```javascript
 while(expression){}
@@ -130,40 +151,60 @@ do{
 ```
 - For one statement, braces can be omitted.
 - `break` and `continue`, with label.
+
 ###2.5 Context（上下文）
 - With
 
+###2.6 Else (其他)
+- eval: Execute a string as statement.
+    + 没有独立的作用域
+    + 不推荐使用
+```javascript
+eval('var a = 10;')
+```
 
 ##5. Function（函数）
 - First Class
-- Actually, functions are `Function` objects
+- Actually, function is a `Function` object.
+
 ###5.1 Define
 ```javascript
     function funName(args){}    // Normal definition
     funName = function(args){}  // Anonymous function and Assignment
+    funName = function funName(args){}  // Named function and Assignment, easy to debug and recursive
     var funName = new Function("args","funBody") //可以动态生成程序
 ```
 - Definition can be nested.
+- 不要在非函数的代码块（如，分支、循环）中声明函数（第一种）
+
 ###5.2 Argument
 - Actual arguments can be less or more than definition
-- Default value is undefined
+- Default value: undefined
+- Function.length is the number of defined arguments, not real arguments.
+- 值/地址传递
+- `arguments` object
+    + 包含所有参数的类数组对象
+    + arguments.callee：对应的函数
+
 ###5.3 Return（返回值）
 - `return` a value
 - `rerurn` without a value or no `return`——`undefined`
+
 ###5.4 Override
 - No
 
-##2. 函数（Function对象）
-**函数实质也是一个功能完整的对象**
+###5.5 closure
+closure = function + scope
 
-###agguments[]
-在函数代码中，使用arguments数组，无需明确指出参数名，就能访问参数。
-> js不对参数个数进行检验
+###5.6 Immediately-Invoked Function Expression
+```javascript
+(function(){ /* code */ }()); 
+(function(){ /* code */ })();
+```
 
-###属性
-length：定义的参数个数
-###闭包
-闭包，指的是词法表示包括不被计算的变量的函数，也就是说，函数可以使用函数之外定义的变量。
+
+
+
 
 
 ##4. Object（对象）
@@ -359,6 +400,7 @@ ClassB.prototype.sayName = function () {
 * 没有构造函数，不能也无需创建。
 ###RegExp 
 * 正则表达式
+
 ##5. 数组
 动态增长，0-index。
 本质是属性名为index的一个对象。
