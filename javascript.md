@@ -58,7 +58,7 @@ fun = function(){}
 * String：Unicode，`'' or ""`；不可变。 
     * 可被视为字符数组读取，但不能用这种方式删改。 
 
-> Boolean, Number, String类型的变量是伪对象（也有相应的真对象，可以看做包装器），可以使用一些属性和方法 [数字调用方法要加括号]
+> Boolean, Number, String类型的变量可以使用一些属性和方法（js引擎自动打包为对象）
 > 在表现形式上，Array, RegExp和primitive type是一致的，都有一个字面量，可以当作对象使用
 
 ###1.3 Reference Type（引用类型）
@@ -68,8 +68,23 @@ fun = function(){}
 - Object
 
 ###1.4 Type Conversion（类型转换）
-* 可以toString。
+* 自动类型转换
+    - 不同类型的数据进行互相运算；
+    - 对非布尔值类型的数据求布尔值;
+    - 对非数值类型的数据使用一元运算符
 * 使用TypeName()格式通过创建对象的方式强制类型转换
+    - Number()
+        + String：不能完整转换则NaN，自动trim
+        + Boolean：0/1
+        + Undfined：NaN
+        + Null: 0
+        + Object：
+            * 先调用对象的valueOf方法，若返回原始类型则使用Number
+            * 否则调用toString，若返回原始类型则使用Number
+            * 否则报错
+    - String()
+        + Object:
+            * 有Number类似，不过先toString后valueOf
 
 - Convert Anything To String
     - `toString()`
@@ -228,10 +243,11 @@ var obj = {
 "propertyName" in obj
 ```
 - Static Member: No
-    - 但可以通过给构造函数（对象）添加成员方法实现类似效果
+    - 但可以通过给构造函数（对象）添加成员方法（而不是对原型添加）实现类似效果
 - This/Self
 
 ###4.2 Class（类）
+
 ###4.3 Object Creation and Deletion（对象创建与删除）
 - Create/Instantiation
 ```javascript
@@ -267,6 +283,210 @@ for(var key in obj){    // 'key' is not the value of a property.
 ###4.8 Abstract Class and Interface（抽象类与接口）
 ###4.9 Polymorphic（多态）
 
+###4.10 Attributes
+对象的每个属性都有一个对应的attributes对象，保存该属性的一些元信息。
+- 元信息
+    - value：属性的值[undefined]。
+    - writable：属性的值是否可以改变[true]。
+    - enumerable：属性是否可枚举[true]
+    - configurable：属性能否删除，attributes对象可否改变[true]。
+    - get：属性的getter[undefined]。
+    - set：属性的setter[undefined]
+- 读取：Object.getOwnPropertyDescriptor()
+- 设置：Object.defineProperty()，Object.defineProperties()
+    + 未设置项为false或undefined，而不是默认值
+- getter/setter
+```javascript
+var o = {
+    name: 'Joe',
+    get age() {},
+    set age(value) {}
+}
+```
+```javascript
+var user = {name:'Joe'}
+Object.defineProperty(user, 'age', {
+    get: function() {}, 
+    set: function(value) {}
+});
+```
+```javascript
+var o = Object.create(Object.prototype, {
+    foo: { 
+        get: function () {},
+        set: function (value) {);
+    }
+}});
+```
+
+###4.11 控制对象状态
+- Object.preventExtensions：对象无法添加新属性
+- Object.seal：对象无法添加新属性，属性configurable为false
+- Object.freeze：对象不可变
+
+###4.12 内置对象（类）
+
+####Object
++ 继承树的根
++ 作为构造函数使用时，可以接受一个参数。
+    + 如果该参数是一个对象，则直接返回这个对象；
+    + 如果是一个原始类型的值，则返回该值对应的包装对象。
+
+> a = new Object() 等价于 a = {}
+
+- 重要属性：
+    * constructor：对构造函数的引用。
+    * Prototype：对对象原型的引用。
+
+#### Array
+动态增长，0-index。
+本质是属性名为index的一个对象。
+- Create/Instantiation
+```javascript
+var arrName = new Array();
+var arrName = new Array(size);
+var arrName = new Array(d1,d2,d3...);
+var arrName = [d1,d2,d3...];
+```
+- Access
+    - Items can have different types.
+    - Dynamic growth.
+```javascript
+arrayName[5]=78;    //创建空间（首次访问）并赋值
+arrayName.length    //数组长度
+```
+
+> .length可写，进行拓展或截断（不可复原）数组
+
+- 数组转换成字符串
+```javascript
+a.toString() 等价于 a.ValueOf()    //,分隔
+a.join("分隔符")   //数组元素按指定分隔符分隔输出
+```
+-  Array-like Objects
+有数字键和length属性
+arguments对象，以及大多数DOM元素集，还有字符串。
+
+#### 包装类
+- Boolean——尽量别用
+- Number
+- String
+
+#### Math(对象)
+#### Date
+#### RegExp
+- 参照Perl 5
+- Create/Instantiation
+```javascript
+var var regex = /xyz/g;
+var regex = new RegExp("xyz", 'g');
+```
+
+- 正则表达式
+    - 字面量字符（literal characters）
+    - 元字符（metacharacters）
+        + `.`: 除`\r` `\n` 行分隔符(\u2028)和段分隔符(\u2029)外的所有字符。
+        + `^`: 字符串的起首。
+        + `$`: 字符串的行尾。
+        + `|`: 或
+    - 字符类 `[]`: 匹配类中某个字符即可
+        + `^`: 如果第一个字符是`^`(仅在[]中第一个字符有效), 则表示除了字符类之中的字符，其他字符都可以匹配。`[^abc]`
+        + `-`: 字符范围(仅在[]内，且头尾各有一个字符时有效)。`[a-zA-Z]`
+    - 重复类 `{}`: 模式的重复次数
+        + `{n}`: 重复n次
+        + `{n,}`: 重复>=n次
+        + `{n,m}`: 重复n <= x <=m 次。
+    - 量词符：
+        + `?`: {0, 1}
+        + `*`: {0,}
+        + `+`: {1,}
+        - 默认为贪婪匹配，如/a*/对于'aaa'匹配为'aaa'
+        - 若要非贪婪模式，可在量词符后面加`?`，/a+?/只匹配`a`
+    - 转义
+        + `^ . [ $ ( ) | * + ? { \`需要用`\`转义
+        + 使用RegExp方法生成正则对象，转义需要使用`\\`。
+    - 修饰符
+        + `g`: RegExp方法中，`g`记录上次的位置，String方法中，`g`代表全局匹配
+        + `i`: 忽略大小写
+        + `m`: 忽略换行符
+    - 预定义模式（大写形式为小写形式的反）
+        + `\d`: [0-9]
+        + `\w`: [A-Za-z0-9_]
+        + `\s` 匹配空格（包括制表符、空格符、断行符等），[\t\r\n\v\f]。
+        + `\b` 匹配词的边界。
+    - 组匹配：正则表达式的`()`表示分组匹配，括号中的模式可以用来捕获分组的内容
+        + 在正则表达式内部，可以用`\n`引用括号匹配的内容，n是从1开始的自然数
+        + 非捕获组 `(?:x)`: 表示匹配的结果中不计入这个括号。
+        + 先行断言 `x(?=y)`: x只有在y前面才匹配，y不会被计入返回结果。
+        + 后行断言 `x(?!y)`: x只有不在y前面才匹配，y不会被计入返回结果。
+- 常用方法
+    - RegExp.prototype.test()：字符串是否匹配RE
+        + 如果`g`，会记录搜索位置，则每一次都从RegExp.prototype.lastIndex位置开始匹配
+    - RegExp.prototype.exec()：返回匹配结果数组。
+        + 匹配失败返回Null
+        + 结果第一个元素为匹配出的字符串，后面的元素是圆括号对应的组
+        + 结果数组包括两个额外属性：input(整个原字符串),index(整个模式匹配成功的开始位置)
+        + 如果`g`，则可以多次exec，下一次从RegExp.prototype.lastIndex开始匹配。
+    - String.prototype.match()：对字符串进行正则匹配，返回匹配结果
+        + 类似exec()
+        + 如果`g`，则返回所有匹配成功的结果
+    - String.prototype.search()：第一个匹配结果在字符串中的位置。忽略`g`。
+    - String.prototype.replace(search, [String|Function]replacement)
+        + replacement中特殊含义的字符串
+            + $& --> 匹配的子字符串。
+            + $` --> 匹配结果前面的文本。
+            + $' --> 匹配结果后面的文本。
+            + $n --> 匹配成功的第n组内容，n从1开始计数。
+            + $$ --> 美元符号$。
+        - replacement可以是函数，参数为：
+            - 1：匹配到的内容
+            - 2~N-2: 组匹配 $1-$n
+            - N-1：匹配到的内容在整个字符串中的位置
+            - N：字符串
+        - `g`表示全局替换
+    - String.prototype.split(separator, [limit])
+        + 如果正则表达式带有括号，则括号匹配的部分也会作为数组成员返回。
+
+#### JSON
+#### ArrayBuffer
+一段可以存放数据的连续内存区域
+- 创建
+```javascript
+var buffer = new ArrayBuffer(byteSize)
+```
+
+> 通过检测byteLength属性判断是否分配成功
+
+除了slice方法，ArrayBuffer对象不提供任何直接读写内存的方法，只允许在其上方建立视图，然后通过视图读写。
+- 视图/Typed Array
+ArrayBuffer作为内存区域，可以存放多种类型的数据。通常用作本机内通信
+    - Int8Array,Uint8Array,Int16Array,Uint16Array,Int32Array,Uint32Array,Float32Array,Float64Array,
+    - 构造函数的参数为
+        - 从ArrayBuffer生成：底层ArrayBuffer对象, 开始的字节序号 = 0, 包含的数据个数 = end。
+        - 直接生成：length
+        - 通过普通数组: array
+    - 完全适用普通数组的操作
+- DataView
+    + 处理网络传来的数据，支持设定大小端
+```javascript
+var dataView = DataView(ArrayBuffer buffer [, 字节起始位置 [, 长度]]);
+
+```
+###6. Exception
+- pattern: try-throw-catch-finally
+```javascript
+try{
+    throw "error message"
+}catch(e){
+    console.log(e.message)
+}finally{}
+```
+
+> try中return语句的执行是在finanlly代码之前，只是等finnally代码执行完毕后才返回。如果finally中也有return，会覆盖。
+
+6.1 Error类型
+- 基本属性：name，message，stack
+- 派生错误类型：SyntaxError，ReferenceError，RangeError，TypeError，URIError，EvalError
 
 ##3. Object
 * JavaScript 基于 prototype，而不是基于类的。
@@ -372,62 +592,6 @@ ClassB.prototype.sayName = function () {
 ```
 
 
-##4. JS常用对象（实质是'类'）
-###Object：与Java中地位相同。
-属性：
-
-* constructor：对构造函数的引用（指针）。对于Object对象指向原始的 Object() 函数。
-* Prototype：对对象原型的引用。对于所有的对象，它默认返回 Object 对象的一个实例。
-
-方法：
-
-* hasOwnProperty(property)：判断对象是否有某个特定的属性。必须用字符串指定该属性。
-* isPrototypeOf(object)：判断该对象是否为另一个对象的原型。
-* propertyIsEnumerable：判断给定的属性是否可以用 for...in 语句进行枚举。
-* toString()：返回对象的原始字符串表示。
-* valueOf()：返回最适合该对象的原始值。对于许多对象，与 toString() 的返回值相同。
-###Boolean——尽量别用
-###Number
-*  Number.MAX_VALUE 和 Number.MIN_VALUE
-*  Number.POSITIVE_INFINITY， Number.NEGATIVE_INFINITY——isFinite()
-###String
-###Date
-* 自动使用当前的日期和时间作为其初始值
-* Date对象可以进行比较
-
-###Math
-* 用来执行各种计算
-* 没有构造函数，不能也无需创建。
-###RegExp 
-* 正则表达式
-
-##5. 数组
-动态增长，0-index。
-本质是属性名为index的一个对象。
-###Create/Instantiation
-```javascript
-var arrName = new Array([size]);
-var arrName = new Array(d1,d2,d3...);
-var arrName = [d1,d2,d3...];
-```
-###Access
-- Items can have different types.
-- Dynamic growth.
-```javascript
-arrayName[5]=78;    //创建空间（首次访问）并赋值
-arrayName.length    //数组长度
-```
-* 开始时有size，也可以增长。
-* .length可写，进行拓展或截断（不可复原）数组
-###数组转换成字符串
-```javascript
-a.toString() 等价于 a.ValueOf()    //,分隔
-a.join("分隔符")   //数组元素按指定分隔符分隔输出
-```
-### Array-like Objects
-有数字键和length属性
-arguments对象，以及大多数DOM元素集，还有字符串。
-
 ###6. 语句
 * 循环语句支持 `for x in xs`
 * 可以使用标签标记语句块。
@@ -456,15 +620,7 @@ function validate_required(field,alerttxt)
     }
 }
 ```
-###7. Exception
-try-throw-catch-finally异常
-```javascript
-try{
-    throw "error message"
-}catch(e){
-    console.log(e.message)
-}finally{}
-```
+
 ##8. window
 window是浏览器的全局对象，所有的全局变量/函数都是window的成员。
 使用window中对象时可以省略window.

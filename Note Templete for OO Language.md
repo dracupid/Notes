@@ -74,5 +74,6 @@
 ###5.2 Argumesnt（参数）
 ###5.3 Return（返回值）
 ###5.4 Override（重载）
+
 ##6. Exception（异常）
 - Pattern: try-throw-catch?
