@@ -105,7 +105,6 @@ fun = function(){}
 * 原始类型在栈，引用类型在堆
 
 
-
 ##2. Statement and Expression（语句和表达式）
 ###2.1 Scope（作用域）
 
@@ -139,6 +138,7 @@ Else
 - 圆括号:如果把表达式放在圆括号之中，作用是求值；如果跟在函数的后面，作用是调用函数。
 - `void`: 执行一个表达式，然后返回undefined。
 - `,`：对两个表达式求值，并返回后一个表达式的值
+
 ###2.3 Branch（分支）
 ```javascript
 if(expression){
@@ -146,11 +146,13 @@ if(expression){
 }else{
 }
 ```
+
 - For one statement, braces can be omitted.
+
 ```javascript
 switch(expression){
-    case expression :
-    default:
+    case expression:  ;
+    default:   ;
 }
 ```
 - Use `===` to compare.
@@ -230,10 +232,15 @@ closure = function + scope
 ```javascript
 var obj = {
     key1: value1,
-    'key2': value2
+    'key-2': value2
 }
 ```
 - Peculiarity（特点）
+
+- 类型
+    - 本地对象：ECMA-262 定义的类（引用类型）
+    - 内置对象：开发者不必明确实例化内置对象，它已被实例化了。只有 Global 和 Math（也是本地对象）
+    - 宿主对象：宿主环境提供的对象吗，如DOM和BOM对象
 ###4.1 Membership（成员）
 - Term for different members
     - Property: All members
@@ -242,16 +249,22 @@ var obj = {
 ```javascript
 "propertyName" in obj
 ```
+
 - Static Member: No
     - 但可以通过给构造函数（对象）添加成员方法（而不是对原型添加）实现类似效果
-- This/Self
+- This
+
 
 ###4.2 Class（类）
+* JavaScript 基于 prototype，而不是基于类的。
+* 构造函数承担类的作用
+
 
 ###4.3 Object Creation and Deletion（对象创建与删除）
 - Create/Instantiation
 ```javascript
 objName = new Object(args); // () is optional when there's no args
+objName = Object.create(new Array[]); 
 objName = {attrA:value, attrB:value...};//创建+赋值,对象字面量
 ```
 
@@ -263,7 +276,7 @@ objName[name]   // name can be a expression which products a string
 ```
 > Object can be used as a map or dictionary
 
-- Create: Just write. 
+- Create: Just write.
 - Delete
 ```javascript
 delete objName.attrA； //只能删除自己定义的，非继承的属性
@@ -272,14 +285,117 @@ delete objName.attrA； //只能删除自己定义的，非继承的属性
     - enumberable properties
 ```javascript
 for(var key in obj){    // 'key' is not the value of a property. 
-    console.log(obj[key])   
+    console.log(obj[key])
 }
 ```
 
 - Access Control
+- 只有public属性，使用_name命名来约定为私有变量
+- 可以用闭包实现私有
+
+
 ###4.5 Constructor（构造函数）
+（对象构造器）——无法共享函数
+```javascript
+function objName(args...){
+    this.attrA=value;   //引用对象的成员时，必须使用 this 关键字
+    this.methodA=function(){};
+}
+var x = new objName(a,b...)
+```
+- 没有return
+- this指代调用该方法的对象
+
+
 ###4.6 Destructor and Garbage Collection（析构函数与垃圾回收）
 ###4.7 Inheritance（继承）
+- 通过原型(prototype)链实现继承
+- 所有对象都有构造函数，而所有函数都有prototype属性，所以所有对象都有自己的prototype原型**对象**。
+- 当读取对象的某个属性时，先寻找对象本身的属性，如果找不到，就到它的原型去找
+
+
+####原型方式——无法传递参数
+```javascript
+function Name(args...){                     
+}
+Name.prototype.attrA="";
+Name.prototype.methodA=function(){};
+var x=name();   //Name的原型的所有属性都被立即赋予要创建的对象
+x.attrA="**";
+```
+* prototype是个默认new了的对象，可以用对象的赋值方法。
+* 原型对象相当于类的成员，有默认值，但所有类共享，类似COW的静态成员。
+* 只有对象进行赋值是prototype才会COW，如果是成员对象进行操作改变了对象的值，不会COW。如arrayName.push("");
+####原型混合构造函数——主要使用，综合两种的优点
+```javascript
+function Name(args...){
+    this.attrA="";              
+}
+Name.prototype.methodA=function(){};
+var x=name();
+```
+* 成员变量使用构造函数，成员方法使用原型。
+####动态原型方法——也可使用（看起来更紧密）
+```javascript
+function Car(sColor,iDoors,iMpg) {
+  this.color = sColor;
+  this.drivers = new Array("Mike","John");
+  
+  if (typeof Car._initialized == "undefined") {
+    Car.prototype.showColor = function() {};
+    Car._initialized = true;
+  }
+}
+```
+* 原型最大的作用是对非自定义对象进行修改。！
+
+* 将对象内部想象成map，遍历的是key（属性名称）
+###继承
+* 只有自定义的类可以做基类。
+* 很多间接实现的方法
+####对象冒充（可实现多继承）
+```javascript
+function ClassB(sColor, sName) {
+    this.newMethod = ClassA;
+    this.newMethod(sColor);     //调用构造函数但不创建新变量
+    delete this.newMethod;
+
+    this.name = sName;
+    this.sayName = function () {
+        alert(this.name);
+    };
+}
+```
+* 前三行可以用一下函数替换
+    * `ClassA.call(this, sColor);`      //每个参数都是call的参数
+    * `ClassA.apply(this, new Array(sColor))`;//参数数组是call的参数，arguments[]
+####原型链（不支持多继承）
+```javascript
+    ClassB.prototype = new ClassA();    //不能有参数
+```
+* 类型检测时可以同时具备父类型和子类型
+####混合方式
+```javascript
+function ClassA(sColor) {
+    this.color = sColor;
+}
+
+ClassA.prototype.sayColor = function () {
+    alert(this.color);
+};
+
+function ClassB(sColor, sName) {
+    ClassA.call(this, sColor);
+    this.name = sName;
+}
+
+ClassB.prototype = new ClassA();
+
+ClassB.prototype.sayName = function () {
+    alert(this.name);
+};
+```
+
 ###4.8 Abstract Class and Interface（抽象类与接口）
 ###4.9 Polymorphic（多态）
 
@@ -336,7 +452,7 @@ var o = Object.create(Object.prototype, {
 
 - 重要属性：
     * constructor：对构造函数的引用。
-    * Prototype：对对象原型的引用。
+    * __proto__：对对象原型的引用, 即constructor.prototype
 
 #### Array
 动态增长，0-index。
@@ -470,126 +586,27 @@ ArrayBuffer作为内存区域，可以存放多种类型的数据。通常用作
     + 处理网络传来的数据，支持设定大小端
 ```javascript
 var dataView = DataView(ArrayBuffer buffer [, 字节起始位置 [, 长度]]);
-
 ```
-###6. Exception
+
+## 6. Exception
 - pattern: try-throw-catch-finally
 ```javascript
 try{
-    throw "error message"
-}catch(e){
-    console.log(e.message)
+    throw "error message";
+}catch (e){
+    console.log(e.message);
 }finally{}
 ```
 
-> try中return语句的执行是在finanlly代码之前，只是等finnally代码执行完毕后才返回。如果finally中也有return，会覆盖。
+> try中return语句的执行是在finanlly代码之前，只是等finally代码执行完毕后才返回。如果finally中也有return，会覆盖。
 
-6.1 Error类型
+### 6.1 Error类型
 - 基本属性：name，message，stack
 - 派生错误类型：SyntaxError，ReferenceError，RangeError，TypeError，URIError，EvalError
 
+
 ##3. Object
-* JavaScript 基于 prototype，而不是基于类的。
 
-
-
-###类型
-本地对象：ECMA-262 定义的类（引用类型）
-内置对象：开发者不必明确实例化内置对象，它已被实例化了。只有 Global 和 Math（也是本地对象）
-宿主对象：宿主环境提供的对象吗，如DOM何BOM对象
-###私有
-只有public对象，使用_name_命名来约定为私有变量
-####构造函数（对象构造器）——无法共享函数
-```javascript
-function objName(args...){  
-    this.attrA=value;   //引用对象的成员时，必须使用 this 关键字
-    this.methodA=function(){};  
-}
-var x = new objName(a,b...)
-```
-- 没有return
-- this指代调用该方法的对象
-####原型方式——无法传递参数
-```javascript
-function Name(args...){                     
-}
-Name.prototype.attrA="";
-Name.prototype.methodA=function(){};
-var x=name();   //Name的原型的所有属性都被立即赋予要创建的对象
-x.attrA="**";
-```
-* prototype是个默认new了的对象，可以用对象的赋值方法。
-* 原型对象相当于类的成员，有默认值，但所有类共享，类似COW的静态成员。
-* 只有对象进行赋值是prototype才会COW，如果是成员对象进行操作改变了对象的值，不会COW。如arrayName.push("");
-####原型混合构造函数——主要使用，综合两种的优点
-```javascript
-function Name(args...){
-    this.attrA="";              
-}
-Name.prototype.methodA=function(){};
-var x=name();
-```
-* 成员变量使用构造函数，成员方法使用原型。
-####动态原型方法——也可使用（看起来更紧密）
-```javascript
-function Car(sColor,iDoors,iMpg) {
-  this.color = sColor;
-  this.drivers = new Array("Mike","John");
-  
-  if (typeof Car._initialized == "undefined") {
-    Car.prototype.showColor = function() {};
-    Car._initialized = true;
-  }
-}
-```
-* 原型最大的作用是对非自定义对象进行修改。！
-
-* 将对象内部想象成map，遍历的是key（属性名称）
-###继承
-* 只有自定义的类可以做基类。
-* 很多间接实现的方法
-####对象冒充（可实现多继承）
-```javascript
-function ClassB(sColor, sName) {
-    this.newMethod = ClassA;
-    this.newMethod(sColor);     //调用构造函数但不创建新变量
-    delete this.newMethod;
-
-    this.name = sName;
-    this.sayName = function () {
-        alert(this.name);
-    };
-}
-```
-* 前三行可以用一下函数替换
-    * `ClassA.call(this, sColor);`      //每个参数都是call的参数
-    * `ClassA.apply(this, new Array(sColor))`;//参数数组是call的参数，arguments[]
-####原型链（不支持多继承）
-```javascript
-    ClassB.prototype = new ClassA();    //不能有参数
-```
-* 类型检测时可以同时具备父类型和子类型
-####混合方式
-```javascript
-function ClassA(sColor) {
-    this.color = sColor;
-}
-
-ClassA.prototype.sayColor = function () {
-    alert(this.color);
-};
-
-function ClassB(sColor, sName) {
-    ClassA.call(this, sColor);
-    this.name = sName;
-}
-
-ClassB.prototype = new ClassA();
-
-ClassB.prototype.sayName = function () {
-    alert(this.name);
-};
-```
 
 
 ###6. 语句
